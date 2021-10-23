@@ -5,10 +5,13 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 
 }
+
 const axios = require('axios');
 const fs = require('fs')
 const path = require('path')
 const https = require('https')
+const express = require('express');
+const exp = require('constants');
 
 const cert = fs.readFileSync(
     path.resolve(__dirname, `../certificados/${process.env.GN_CERT}`)
@@ -23,13 +26,13 @@ let credentials = process.env.GN_CLIENT_ID + ':' + process.env.GN_CLIENT_SECRET;
 let auth = Buffer.from(credentials).toString('base64');
 
 
-// const credentials = Buffer.from(
-//     `${process.env.GN_CLIENT_ID}: ${process.env.GN_CLIENT_SECRET}`
-// ).toString('base64')
+const app = express();
 
+app.set('view engine', 'ejs');
+app.set('views', 'src/views');
 
-
-    axios({
+app.get('/', async (req, res)=> {
+    const authResponse = await axios({
         method: 'POST',
         url:`${process.env.GN_ENDPOINT}/oauth/token`,
         headers:{
@@ -43,9 +46,9 @@ let auth = Buffer.from(credentials).toString('base64');
     
     }).catch((e)=>{
             console.log(e)
-    }).then((response)=>{
+    })
 
-        const acessToken =  response.data?.access_token;
+        const acessToken =  authResponse.data?.access_token;
 
         const reqGN =  axios.create({
             baseURL: process.env.GN_ENDPOINT,
@@ -68,9 +71,18 @@ let auth = Buffer.from(credentials).toString('base64');
             solicitacaoPagador: "Informe o número ou identificador do pedido."
           }
 
-        reqGN.post("/v2/cob", dataCob).catch((e)=>{console.log(e)}).then((response)=>{console.log(response.data)})
+        const cobResponse = await reqGN.post("/v2/cob", dataCob).catch((e)=>{console.log(e)})
+        
+        res.send(cobResponse.data)
 
-    })
+   
+});
+
+app.listen(8000, ()=>{
+    console.log('running')
+})
+
+    
     
     
 
