@@ -43,15 +43,37 @@ let auth = Buffer.from(credentials).toString('base64');
     
     }).catch((e)=>{
             console.log(e)
-    }).then((Response)=>{console.log(Response.data)})
+    }).then((response)=>{
+
+        const acessToken =  response.data?.access_token;
+
+        const reqGN =  axios.create({
+            baseURL: process.env.GN_ENDPOINT,
+            httpsAgent: agent,
+            headers:{
+                Authorization: `Bearer ${acessToken}`,
+                'Content-Type' : 'application/json'
+            }
+        })
+
+
+        const dataCob = {
+            calendario: {
+              expiracao: 3600,
+            },
+            valor: {
+              original: "100.00"
+            },
+            chave: "71cdf9ba-c695-4e3c-b010-abb521a3f1be",
+            solicitacaoPagador: "Informe o número ou identificador do pedido."
+          }
+
+        reqGN.post("/v2/cob", dataCob).catch((e)=>{console.log(e)}).then((response)=>{console.log(response.data)})
+
+    })
     
     
 
-
-
-
-
-console.log(process.env.GN_ENDPOINT);
 
 // curl --request POST \
 //   --url https://api-pix-h.gerencianet.com.br/oauth/token \
