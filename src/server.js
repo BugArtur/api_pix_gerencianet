@@ -28,8 +28,10 @@ let auth = Buffer.from(credentials).toString('base64');
 
 const app = express();
 
-app.set('view engine', 'ejs');
+
 app.set('views', 'src/views');
+app.set('view engine', 'ejs');
+
 
 app.get('/', async (req, res)=> {
     const authResponse = await axios({
@@ -72,8 +74,14 @@ app.get('/', async (req, res)=> {
           }
 
         const cobResponse = await reqGN.post("/v2/cob", dataCob).catch((e)=>{console.log(e)})
+
+        const qrCodeResponse = await reqGN.get(`/v2/loc/${cobResponse.data.loc.id}/qrcode`).catch((e)=>{console.log(e)})
         
-        res.send(cobResponse.data)
+        
+        res.render('qrcode.ejs', { qrcodeImage: qrCodeResponse.data.imagemQrcode });
+        
+
+        
 
    
 });
