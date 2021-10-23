@@ -1,0 +1,22 @@
+{
+  "name": "apipix",
+  "version": "1.0.0",
+  "description": "Api Pix gerencianet",
+  "main": "index.js",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.14"
+  },
+  "devDependencies": {
+    "axios": "^0.23.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "123123"
+  ],
+  "author": "artur",
+  "license": "ISC"
+}
