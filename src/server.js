@@ -8,10 +8,11 @@ if(process.env.NODE_ENV !== 'production'){
 
 const GNRequest = require('./apis/gerencianet')
 const express = require('express');
-
+const bodyParser = require('body-parser')
 
 
 const app = express();
+app.use(bodyParser.json());
 
 const reqGNAlready = GNRequest({
   clientID: process.env.GN_CLIENT_ID,
@@ -51,6 +52,11 @@ app.get('/cobrancas', async (req, res)=>{
   const reqGN = await reqGNAlready
   const listaCob = await reqGN.get('/v2/cob?inicio=2021-10-20T16:01:35Z&fim=2021-10-25T20:10:00Z')
   res.send(listaCob.data);
+})
+
+app.post('/webhooks(/pix)?', (req, res) =>{
+  console.log(req.body);
+  res.send('200')
 })
 app.listen(8000, ()=>{
     console.log('running')
