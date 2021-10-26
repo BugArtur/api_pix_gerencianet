@@ -33,9 +33,9 @@ app.get('/', async (req, res)=> {
               expiracao: 3600,
             },
             valor: {
-              original: "100.00"
+              original: "0.10"
             },
-            chave: "71cdf9ba-c695-4e3c-b010-abb521a3f1be",
+            chave: "605a4b48-af9e-4876-bce4-c240699eeaf0",
             solicitacaoPagador: "Informe o número ou identificador do pedido."
           }
 
